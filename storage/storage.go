@@ -14,7 +14,7 @@ var (
 	once sync.Once
 )
 
-//NewPostgresDB  open Data Base
+//NewPostgresDB  open DataBase
 func NewPostgresDB() {
 	once.Do(func() {
 		var err error
