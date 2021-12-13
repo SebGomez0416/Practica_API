@@ -1,5 +1,7 @@
 package model
 
+import "errors"
+
 //  person estructura de una persona
 type Person struct {
 	ID            int
@@ -13,6 +15,7 @@ type Persons []*Person
 
 type Storage interface {
 	Create(*Person) error
+	Update(*Person) error
 }
 
 //servicio de product
@@ -26,4 +29,13 @@ func NewService(s Storage) *Service {
 
 func (s *Service) Create(p *Person) error {
 	return s.storage.Create(p)
+}
+
+func (s *Service) Update(m *Person) error {
+
+	if m.ID == 0 {
+		return errors.New("la persona no contien un id")
+	}
+
+	return s.storage.Update(m)
 }

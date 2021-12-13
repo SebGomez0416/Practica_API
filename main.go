@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+
+	"github.com/SebGomez0416/Practica_API/model"
 	"github.com/SebGomez0416/Practica_API/storage"
 )
 
@@ -8,14 +11,20 @@ func main() {
 
 	storage.NewPostgresDB()
 
-	// storagePerson := storage.NewPslPerson(storage.Pool())
-	// servicePerson := model.NewService(storagePerson)
+	storagePerson := storage.NewPslPerson(storage.Pool())
+	servicePerson := model.NewService(storagePerson)
 
-	// err := servicePerson.Create()
+	p := &model.Person{ID: 1,
+		Name:          "sebastian gomez",
+		Age:           30,
+		CommunityName: "EDTeam",
+	}
 
-	// if err != nil {
+	err := servicePerson.Update(p)
 
-	// 	log.Fatalf("Person.Create: %v", err)
-	// }
+	if err != nil {
+
+		log.Fatalf("Person.Create: %v", err)
+	}
 
 }
