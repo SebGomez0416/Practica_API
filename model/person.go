@@ -4,7 +4,7 @@ import "errors"
 
 //  person estructura de una persona
 type Person struct {
-	ID            int
+	ID            uint
 	Name          string
 	Age           uint8
 	CommunityName string
@@ -16,6 +16,7 @@ type Persons []*Person
 type Storage interface {
 	Create(*Person) error
 	Update(*Person) error
+	Delete(uint) error
 }
 
 //servicio de product
@@ -38,4 +39,9 @@ func (s *Service) Update(m *Person) error {
 	}
 
 	return s.storage.Update(m)
+}
+
+func (s *Service) Delete(id uint) error {
+
+	return s.storage.Delete(id)
 }

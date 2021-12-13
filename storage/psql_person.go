@@ -13,6 +13,8 @@ const (
 
 	psqlUpdatePerson = `UPDATE person SET name = $1, age = $2,
 	community_name = $3 WHERE id = $4`
+
+	psqlDeletePerson = `DELETE FROM person WHERE id = $1`
 )
 
 // PsqlPerson used for work whit postgres - person
@@ -67,4 +69,32 @@ func (psql *PsqlPerson) Update(p *model.Person) error {
 	}
 	fmt.Println("se actualizo correctamente")
 	return nil
+}
+
+func (psql *PsqlPerson) Delete(id uint) error {
+	stmt, err := psql.db.Prepare(psqlDeletePerson)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	res, err := stmt.Exec(id)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no existe la persona con id: %d", id)
+	}
+	fmt.Println("se borro correctamente")
+	return nil
+
 }

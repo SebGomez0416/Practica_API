@@ -14,13 +14,13 @@ func main() {
 	storagePerson := storage.NewPslPerson(storage.Pool())
 	servicePerson := model.NewService(storagePerson)
 
-	p := &model.Person{ID: 1,
+	p := &model.Person{
 		Name:          "sebastian gomez",
 		Age:           30,
 		CommunityName: "EDTeam",
 	}
 
-	err := servicePerson.Update(p)
+	err := servicePerson.Create(p)
 
 	if err != nil {
 
