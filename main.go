@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/SebGomez0416/Practica_API/model"
@@ -14,17 +15,19 @@ func main() {
 	storagePerson := storage.NewPslPerson(storage.Pool())
 	servicePerson := model.NewService(storagePerson)
 
-	p := &model.Person{
-		Name:          "sebastian gomez",
-		Age:           30,
-		CommunityName: "EDTeam",
-	}
+	// p := &model.Person{
+	// 	Name:          "carlos santana",
+	// 	Age:           23,
+	// 	CommunityName: "platzi",
+	// }
 
-	err := servicePerson.Create(p)
+	ps, err := servicePerson.GetAll()
 
 	if err != nil {
 
 		log.Fatalf("Person.Create: %v", err)
 	}
+
+	fmt.Println(ps)
 
 }

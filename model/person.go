@@ -1,6 +1,9 @@
 package model
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 //  person estructura de una persona
 type Person struct {
@@ -16,7 +19,13 @@ type Persons []*Person
 type Storage interface {
 	Create(*Person) error
 	Update(*Person) error
+	GetAll() (Persons, error)
 	Delete(uint) error
+}
+
+func (p *Person) String() string {
+
+	return fmt.Sprintf("id: %d, name:%s, age: %d, community: %s,\n", p.ID, p.Name, p.Age, p.CommunityName)
 }
 
 //servicio de product
@@ -39,6 +48,10 @@ func (s *Service) Update(m *Person) error {
 	}
 
 	return s.storage.Update(m)
+}
+
+func (s *Service) GetAll() (Persons, error) {
+	return s.storage.GetAll()
 }
 
 func (s *Service) Delete(id uint) error {

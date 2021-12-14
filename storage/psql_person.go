@@ -15,6 +15,9 @@ const (
 	community_name = $3 WHERE id = $4`
 
 	psqlDeletePerson = `DELETE FROM person WHERE id = $1`
+
+	psqlGetAllPerson = `SELECT  id, name, age,community_name
+	FROM person`
 )
 
 // PsqlPerson used for work whit postgres - person
@@ -44,6 +47,7 @@ func (psql *PsqlPerson) Create(p *model.Person) error {
 
 }
 
+// Update implement the interface person.model
 func (psql *PsqlPerson) Update(p *model.Person) error {
 
 	stmt, err := psql.db.Prepare(psqlUpdatePerson)
@@ -71,6 +75,42 @@ func (psql *PsqlPerson) Update(p *model.Person) error {
 	return nil
 }
 
+// GetAll implement the interface person.model
+func (psql *PsqlPerson) GetAll() (model.Persons, error) {
+
+	stmt, err := psql.db.Prepare(psqlGetAllPerson)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	ps := make(model.Persons, 0)
+
+	for rows.Next() {
+		p := &model.Person{}
+
+		err := rows.Scan(&p.ID, &p.Name, &p.Age, &p.CommunityName)
+		if err != nil {
+			return nil, err
+		}
+		ps = append(ps, p)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return ps, nil
+}
+
+// Delete implement the interface person.model
 func (psql *PsqlPerson) Delete(id uint) error {
 	stmt, err := psql.db.Prepare(psqlDeletePerson)
 
