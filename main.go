@@ -21,7 +21,7 @@ func main() {
 	// 	CommunityName: "platzi",
 	// }
 
-	ps, err := servicePerson.GetAll()
+	ps, err := servicePerson.GetByID(3)
 
 	if err != nil {
 

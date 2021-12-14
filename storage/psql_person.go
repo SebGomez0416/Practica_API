@@ -7,6 +7,10 @@ import (
 	"github.com/SebGomez0416/Practica_API/model"
 )
 
+type scanner interface {
+	Scan(dest ...interface{}) error
+}
+
 const (
 	psqlCreatePerson = `INSERT INTO person(name,age,community_name)
 	VALUES($1,$2,$3) RETURNING id`
@@ -18,6 +22,8 @@ const (
 
 	psqlGetAllPerson = `SELECT  id, name, age,community_name
 	FROM person`
+
+	psqlGetPersonByID = psqlGetAllPerson + " WHERE id = $1 "
 )
 
 // PsqlPerson used for work whit postgres - person
@@ -94,9 +100,7 @@ func (psql *PsqlPerson) GetAll() (model.Persons, error) {
 	ps := make(model.Persons, 0)
 
 	for rows.Next() {
-		p := &model.Person{}
-
-		err := rows.Scan(&p.ID, &p.Name, &p.Age, &p.CommunityName)
+		p, err := ScanRowPerson(rows)
 		if err != nil {
 			return nil, err
 		}
@@ -108,6 +112,30 @@ func (psql *PsqlPerson) GetAll() (model.Persons, error) {
 	}
 
 	return ps, nil
+}
+
+// GetByID implement the interface person.model
+func (psql *PsqlPerson) GetByID(id uint) (*model.Person, error) {
+
+	stmt, err := psql.db.Prepare(psqlGetPersonByID)
+	if err != nil {
+		return &model.Person{}, err
+	}
+	defer stmt.Close()
+
+	return ScanRowPerson(stmt.QueryRow(id))
+}
+
+func ScanRowPerson(s scanner) (*model.Person, error) {
+	p := &model.Person{}
+
+	err := s.Scan(&p.ID, &p.Name, &p.Age, &p.CommunityName)
+
+	if err != nil {
+		return &model.Person{}, err
+	}
+
+	return p, err
 }
 
 // Delete implement the interface person.model

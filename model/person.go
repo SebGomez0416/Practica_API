@@ -20,6 +20,7 @@ type Storage interface {
 	Create(*Person) error
 	Update(*Person) error
 	GetAll() (Persons, error)
+	GetByID(uint) (*Person, error)
 	Delete(uint) error
 }
 
@@ -52,6 +53,10 @@ func (s *Service) Update(m *Person) error {
 
 func (s *Service) GetAll() (Persons, error) {
 	return s.storage.GetAll()
+}
+
+func (s *Service) GetByID(id uint) (*Person, error) {
+	return s.storage.GetByID(id)
 }
 
 func (s *Service) Delete(id uint) error {
