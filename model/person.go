@@ -6,10 +6,10 @@ import (
 
 //  person estructura de una persona
 type Person struct {
-	ID            uint
-	Name          string
-	Age           uint8
-	CommunityName string
+	ID            uint   `json:"id"`
+	Name          string `json:"name"`
+	Age           uint8  `json:"age"`
+	CommunityName string `json:"community_name"`
 }
 
 // Persons slice de personas
