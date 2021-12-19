@@ -1,6 +1,7 @@
 package authorization
 
 import (
+	"errors"
 	"time"
 
 	"github.com/SebGomez0416/Practica_API/model"
@@ -26,4 +27,32 @@ func GenerateToken(data *model.Login) (string, error) {
 
 	return signedToken, nil
 
+}
+
+func ValidateToken(t string) (model.Claim, error) {
+
+	token, err := jwt.ParseWithClaims(t, &model.Claim{}, verifyfunction)
+
+	if err != nil {
+		return model.Claim{}, err
+	}
+
+	if !token.Valid {
+		return model.Claim{}, errors.New("token invalido")
+	}
+
+	claim, ok := token.Claims.(*model.Claim)
+
+	if !ok {
+
+		return model.Claim{}, errors.New("no se pudo obtener los claim")
+	}
+
+	return *claim, nil
+
+}
+
+func verifyfunction(t *jwt.Token) (interface{}, error) {
+
+	return verifyKey, nil
 }
