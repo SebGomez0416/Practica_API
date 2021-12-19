@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	singkey   *rsa.PrivateKey
+	signkey   *rsa.PrivateKey
 	verifyKey *rsa.PublicKey
 	once      sync.Once
 )
@@ -44,7 +44,7 @@ func loadFiles(privateFile, publicFile string) error {
 
 func parseRSA(privateBytes, publicBytes []byte) error {
 	var err error
-	singkey, err = jwt.ParseRSAPrivateKeyFromPEM(privateBytes)
+	signkey, err = jwt.ParseRSAPrivateKeyFromPEM(privateBytes)
 
 	if err != nil {
 		return err
