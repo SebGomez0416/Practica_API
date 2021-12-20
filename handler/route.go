@@ -16,3 +16,8 @@ func RoutePerson(mux *http.ServeMux, s Storage) {
 	mux.HandleFunc("/v1/persons/update", middleware.Authentication(h.update))
 	mux.HandleFunc("/v1/persons/delete", middleware.Authentication(h.delete))
 }
+
+func RouteLogin(mux *http.ServeMux, s StorageLogin) {
+	h := newLogin(s)
+	mux.HandleFunc("/v1/login", h.login)
+}

@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	err := authorization.LoadFiles("certificates/app.rsa", "certificates/app.rsa.pub")
+	err := authorization.LoadFiles("cmd/certificates/app.rsa", "cmd/certificates/app.rsa.pub")
 
 	if err != nil {
 		log.Fatalf("no se pudo cargar los certificados: %v", err)
@@ -19,10 +19,13 @@ func main() {
 
 	storage.NewPostgresDB()
 	storagePerson := storage.NewPslPerson(storage.Pool())
+	storageLogin := storage.NewPsqlLogin(storage.Pool())
 
 	mux := http.NewServeMux()
 
+	handler.RouteLogin(mux, storageLogin)
 	handler.RoutePerson(mux, storagePerson)
+
 	log.Println("servidor iniciado en el puerto :8080")
 	err = http.ListenAndServe(":8080", mux)
 

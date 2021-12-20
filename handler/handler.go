@@ -9,3 +9,8 @@ type Storage interface {
 	GetByID(uint) (*model.Person, error)
 	Delete(uint) error
 }
+
+type StorageLogin interface {
+	GetByEmail(string) (*model.Login, error)
+	IsLoginValid(data *model.Login) bool
+}
